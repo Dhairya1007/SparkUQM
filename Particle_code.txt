@@ -1,0 +1,42 @@
+#define ARDUINOJSON_ENABLE_PROGMEM 0
+#include <Arduino.h>
+// This #include statement was automatically added by the Particle IDE.
+#include <ArduinoJson.h>
+
+// This #include statement was automatically added by the Particle IDE.
+
+SYSTEM_THREAD(ENABLED);
+
+int count = 0;
+float t,h,c,tvoc,ga,gq;
+// Create the AIO client object
+
+const int capacity = JSON_OBJECT_SIZE(10);
+StaticJsonDocument<capacity> doc;
+
+String inData = "";
+String temp = " ";
+String humid = " ";
+
+void setup() {
+    
+    
+	Serial.begin(9600);
+	Serial1.begin(9600);
+}
+
+
+void loop() {
+	if(Serial1.available())
+	{
+	    inData = Serial1.readStringUntil('#');
+	    deserializeJson(doc, inData);
+	    JsonObject obj = doc.as<JsonObject>();
+	     Particle.publish(inData);
+	    Particle.publish(String(obj));
+	    
+	    
+	}
+}
+
+
